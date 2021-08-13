@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import './App.css';
 
 function App() {
@@ -24,14 +24,18 @@ function App() {
   }
 
   const wtfCookieName = 'wtfCookieName';
-  const cookie = getCookie(wtfCookieName);
-  console.log('loaded wtfcookie: ', cookie);
-  if (!cookie) {
-    console.log('going to set WTFCOOKIE');
-    setCookie(wtfCookieName, 'true', 1);
+  const [failedShown] = useState(!!getCookie(wtfCookieName));
+
+  useLayoutEffect(() => {
+    if (!failedShown) {
+      console.log('storing cookie');
+      setCookie(wtfCookieName, 'true', 1);
+    }
+  }, [failedShown])
+
+  if (!failedShown) {
     return <h2>WTFCOOKIE WAS STORED</h2>;
   }
-
   return <h1>WTFCOOKIE EXISTS</h1>
 }
 
